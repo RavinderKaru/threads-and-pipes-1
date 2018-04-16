@@ -1,0 +1,61 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<fcntl.h>
+#include<sys/types.h>
+#include<unistd.h>
+#include<pthread.h>
+
+int average;
+int minimum;
+int maximum;
+void *avgfct(int *a);
+void *minfct(int *a);
+void *maxfct(int *a);
+int *a[10];
+int n;
+int main()
+{
+printf("enter length of an array\n");
+scanf("%d",&n);
+int *a[n];
+printf("enter elements of an array");
+for(int i=0;i<n;i++)
+{
+scanf("%d",&a[i]);
+}
+pthread_t t1,t2,t3;
+pthread_create(&t1,NULL, &avgfct,(int *)a);
+pthread_create(&t2,NULL, &minfct,(int *)a);
+pthread_create(&t3,NULL, &maxfct,(int *)a);
+pthread_join(t1,NULL);
+pthread_join(t2,NULL);
+pthread_join(t3,NULL);
+printf("average %d",average);
+printf("min %d",minimum);
+printf("max %d",maximum);
+return 0;
+}
+void *avgfct(int *a)
+{int sum=0;
+for(int i=0;i<n;i++)
+{sum=sum+a[i];}
+average=sum/n;
+}
+void *minfct(int *a)
+{ minimum=a[0];
+for(int i=0;i<n;i++)
+{if(minimum<a[i])
+{
+minimum=a[i];
+}}
+}
+void *maxfct(int *a)
+{ maximum=a[0];
+for(int i=0;i<n;i++)
+{if(maximum>a[i])
+{
+maximum=a[i];
+}}
+}
+
+
